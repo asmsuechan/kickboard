@@ -40,12 +40,13 @@ module ShellScriptRunner
     end
 
     # gitのユーザー設定して各リポジトリをcloneしてpullするやつ。
+    # ユーザー設定は別メソッドにする
     # TODO: githubアカウントどうするか
     # R/W権限あるユーザーでなければいけない
     # 指定したリポジトリを全て~/にcloneする
     # 配列でリポジトリ名を受け取る
     # rakeから実行するようにする
-    def setup
+    def clone
       REPOSITORIES.each do |repo|
         # TODO: リポジトリ名からpullしてこれるようにするコードを書く。
         # 環境変数に他の部分入れておくとか
