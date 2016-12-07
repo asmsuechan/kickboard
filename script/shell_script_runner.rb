@@ -6,11 +6,20 @@ module ShellScriptRunner
     def pull(repo_name)
       command = "cd #{build_repo_path(repo_name)} && git pull --rebase"
       exec(command)
+      # エラー起きた時用にstash。エラー起きてない時は何も起こらない
+      stash(repo_name)
     end
 
     def commit_and_push(repo_name, commit_message)
       pull(repo_name)
       command = "cd #{build_repo_path(repo_name)} && git add . && git commit -m '#{commit_message}' && git push origin HEAD"
+      exec(command)
+      # エラー起きた時用にstash。エラー起きてない時は何も起こらない
+      stash(repo_name)
+    end
+
+    def stash(repo_name)
+      command = "cd #{build_repo_path(repo_name)} && git stash"
       exec(command)
     end
 
