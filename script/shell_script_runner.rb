@@ -1,4 +1,6 @@
 require "open3"
+class ShellScriptError < StandardError;end
+
 module ShellScriptRunner
   class << self
     def pull(repo_name)
@@ -10,11 +12,12 @@ module ShellScriptRunner
       pull(repo_name)
       command = "cd #{build_repo_path(repo_name)} && git add . && git commit -m 'hoge' && git push origin HEAD"
       exec(command)
-      #
-      # クラス化してgit pushまでするメソッドとgitエラー時のメソッドとzipを展開するメソッドに分けたほうがいい
     end
 
     # destinationは該当リポジトリの絶対パス
+    # TODO: unzipで上書きされるかどうか。
+    # TODO: 展開されたものをzipにするかその名前のフォルダをzipにするか
+    # その名前のフォルダをzipにしたほうがやりやすい。
     def unzip_to_public(file_path, repo_name)
       destination = build_repo_path(repo_name)
       # TODO: ここもメソッド化する?
@@ -24,6 +27,7 @@ module ShellScriptRunner
     end
 
     # gitのユーザー設定して各リポジトリをcloneしてpullするやつ。
+    # TODO: githubアカウントどうするか
     def setup
     end
 
@@ -34,14 +38,13 @@ module ShellScriptRunner
     # ここでエラーハンドリングする
     def exec(command)
       info, error, pid_and_exit_code = Open3.capture3(command)
-      puts "====="
-      puts command
-      puts "====="
-      puts info
-      puts error
-      puts pid_and_exit_code
-      # それぞれ
-      # commit_info
+      # TODO: コマンド実行時のエラーログは別ファイルにする
+      raise ShellScriptError, error unless pid_and_exit_code.success?
+      #
+      # pid_and_exit_code.class
+      # => Process::Status
+      # それぞれの変数には以下のような値が入ります。
+      # info
       # [master a825daa] hoge
       #
       # error

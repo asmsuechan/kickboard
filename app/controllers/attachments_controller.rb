@@ -10,6 +10,9 @@ class AttachmentsController < ApplicationController
     else
       render :new
     end
+  rescue => e
+    # TODO: ここでエラーフロントに通知する
+    # TODO: ここでエラーをlog/sh_error.logに書き出す
   end
 
   private
