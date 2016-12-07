@@ -9,7 +9,7 @@ module ShellScriptRunner
 
   class << self
     def pull(repo_name)
-      command = "cd #{build_repo_path(repo_name)} && git pull --rebase"
+      command = "cd #{build_repo_path(repo_name)} && git pull origin HEAD --rebase"
       exec(command)
       # エラー起きた時用にstash。エラー起きてない時は何も起こらない
       stash(repo_name)
@@ -35,8 +35,8 @@ module ShellScriptRunner
     def unzip_to_public(file_path, repo_name)
       destination = build_repo_path(repo_name)
       absolute_zip_path = Rails.root.join('tmp' + file_path).to_s
-      shell_command = "unzip " + absolute_zip_path + " -d " + destination + "/public"
-      exec(shell_command)
+      command = "unzip " + absolute_zip_path + " -d " + destination + "/public"
+      exec(command)
     end
 
     # gitのユーザー設定して各リポジトリをcloneしてpullするやつ。

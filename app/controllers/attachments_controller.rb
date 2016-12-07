@@ -12,7 +12,7 @@ class AttachmentsController < ApplicationController
     end
   rescue => e
     # TODO: ここでエラーフロントに通知する
-    # TODO: ここでエラーをlog/sh_error.logに書き出す
+    Rails.application.config.shellscript_error_logger.info(e)
   end
 
   private
