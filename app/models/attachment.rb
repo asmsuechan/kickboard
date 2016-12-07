@@ -5,6 +5,7 @@ class Attachment < ApplicationRecord
   # TODO: ImageをFileにリネーム
   include ImageUploader[:file]
 
+  before_save :setup
   after_commit :unzip
   after_commit :commit
 
@@ -14,5 +15,9 @@ class Attachment < ApplicationRecord
 
   def commit
     ShellScriptRunner.commit_and_push(self.repo_name, self.message)
+  end
+
+  def setup
+    ShellScriptRunner.setup
   end
 end

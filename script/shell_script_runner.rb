@@ -37,6 +37,7 @@ module ShellScriptRunner
     # gitのユーザー設定して各リポジトリをcloneしてpullするやつ。
     # TODO: githubアカウントどうするか
     # 指定したリポジトリを全て~/にcloneする
+    # 配列でリポジトリ名を受け取る
     def setup
     end
 
