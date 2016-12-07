@@ -1,7 +1,12 @@
 require "open3"
 class ShellScriptError < StandardError;end
 
+# 何気なくscriptに置いたけどlibっぽい
 module ShellScriptRunner
+  # 各リポジトリを置くディレクトリ
+  # ~/である意味は特にありません。
+  REPOSITORY_ROOT = '~/'.freeze
+
   class << self
     def pull(repo_name)
       command = "cd #{build_repo_path(repo_name)} && git pull --rebase"
@@ -42,7 +47,7 @@ module ShellScriptRunner
     end
 
     def build_repo_path(repo_name)
-      "~/" + repo_name
+      REPOSITORY_ROOT + repo_name
     end
 
     # ここでエラーハンドリングする
