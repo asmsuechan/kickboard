@@ -1,4 +1,5 @@
 # I referenced [here](https://www.sitepoint.com/rails-file-uploading-you-can-believe-in-with-shrine/)
+# TODO: ImageをFileにリネーム
 class ImageUploader < Shrine
   include ImageProcessing::MiniMagick
 
