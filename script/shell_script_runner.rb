@@ -8,9 +8,9 @@ module ShellScriptRunner
       exec(command)
     end
 
-    def commit_and_push(repo_name)
+    def commit_and_push(repo_name, commit_message)
       pull(repo_name)
-      command = "cd #{build_repo_path(repo_name)} && git add . && git commit -m 'hoge' && git push origin HEAD"
+      command = "cd #{build_repo_path(repo_name)} && git add . && git commit -m '#{commit_message}' && git push origin HEAD"
       exec(command)
     end
 
@@ -20,7 +20,6 @@ module ShellScriptRunner
     # その名前のフォルダをzipにしたほうがやりやすい。
     def unzip_to_public(file_path, repo_name)
       destination = build_repo_path(repo_name)
-      # TODO: ここもメソッド化する?
       absolute_zip_path = Rails.root.join('tmp' + file_path).to_s
       shell_command = "unzip " + absolute_zip_path + " -d " + destination + "/public"
       exec(shell_command)
@@ -28,6 +27,7 @@ module ShellScriptRunner
 
     # gitのユーザー設定して各リポジトリをcloneしてpullするやつ。
     # TODO: githubアカウントどうするか
+    # 指定したリポジトリを全て~/にcloneする
     def setup
     end
 

@@ -13,6 +13,6 @@ class Attachment < ApplicationRecord
   end
 
   def commit
-    ShellScriptRunner.commit_and_push(self.repo_name)
+    ShellScriptRunner.commit_and_push(self.repo_name, self.message)
   end
 end
