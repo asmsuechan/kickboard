@@ -10,13 +10,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161207073303) do
+ActiveRecord::Schema.define(version: 20161207085634) do
 
   create_table "attachments", force: :cascade do |t|
     t.text     "file_data"
     t.string   "message"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string   "repo_name",  null: false
   end
 
 end
