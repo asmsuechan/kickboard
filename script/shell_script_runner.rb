@@ -6,6 +6,7 @@ module ShellScriptRunner
   # 各リポジトリを置くディレクトリ
   # ~/である意味は特にありません。
   REPOSITORY_ROOT = '~/'.freeze
+  REPOSITORIES = %w()
 
   class << self
     def pull(repo_name)
@@ -29,7 +30,6 @@ module ShellScriptRunner
     end
 
     # destinationは該当リポジトリの絶対パス
-    # TODO: unzipで上書きされるかどうか。
     # TODO: 展開されたものをzipにするかその名前のフォルダをzipにするか
     # その名前のフォルダをzipにしたほうがやりやすい。
     def unzip_to_public(file_path, repo_name)
@@ -41,19 +41,25 @@ module ShellScriptRunner
 
     # gitのユーザー設定して各リポジトリをcloneしてpullするやつ。
     # TODO: githubアカウントどうするか
+    # R/W権限あるユーザーでなければいけない
     # 指定したリポジトリを全て~/にcloneする
     # 配列でリポジトリ名を受け取る
+    # rakeから実行するようにする
     def setup
+      REPOSITORIES.each do |repo|
+        # TODO: リポジトリ名からpullしてこれるようにするコードを書く。
+        # 環境変数に他の部分入れておくとか
+        command = "cd #{REPOSITORY_ROOT} && git clone #{repo}"
+        exec()
+      end
     end
 
     def build_repo_path(repo_name)
       REPOSITORY_ROOT + repo_name
     end
 
-    # ここでエラーハンドリングする
     def exec(command)
       info, error, pid_and_exit_code = Open3.capture3(command)
-      # TODO: コマンド実行時のエラーログは別ファイルにする
       raise ShellScriptError, error unless pid_and_exit_code.success?
       #
       # pid_and_exit_code.class

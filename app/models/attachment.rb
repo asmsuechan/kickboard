@@ -2,12 +2,12 @@ require Rails.root.join('script/shell_script_runner')
 
 class Attachment < ApplicationRecord
   DEFAULT_COMMIT_MESSAGE = '[auto commit from kickboard]'.freeze
+  REPOSITORIES = %w()
 
   # TODO: アップロードするzipの制約等コメントに残す
   include FileUploader[:file]
   include ShellScriptRunner
 
-  before_save :setup
   before_save :set_message
   after_commit :unzip
   after_commit :commit
@@ -21,7 +21,7 @@ class Attachment < ApplicationRecord
   end
 
   def setup
-    ShellScriptRunner.setup
+    ShellScriptRunner.setup(REPOSITRIES)
   end
 
   def set_message
