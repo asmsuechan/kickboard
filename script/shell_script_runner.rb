@@ -1,16 +1,43 @@
 require "open3"
-class ShellScriptRunner
+module ShellScriptRunner
+  class << self
   def pull(repo_name)
     command = "cd #{build_repo_path(repo_name)} && git pull --rebase"
-    Open3.capture3(command)
+    exec(command)
   end
 
-  def self.commit_and_push(repo_name)
-    # まずそのリポジトリに移動してpullする
+  def commit_and_push(repo_name)
     pull(repo_name)
     command = "cd #{build_repo_path(repo_name)} && git add . && git commit -m 'hoge' && git push origin HEAD"
-    commit_info, error, pid_and_exit_code = Open3.capture3()
-    puts commit_info
+    exec(command)
+    #
+    # クラス化してgit pushまでするメソッドとgitエラー時のメソッドとzipを展開するメソッドに分けたほうがいい
+  end
+
+  # destinationは該当リポジトリの絶対パス
+  def unzip_to_public(file_path, repo_name)
+    destination = build_repo_path(repo_name)
+    # TODO: ここもメソッド化する?
+    absolute_zip_path = Rails.root.join('tmp' + file_path).to_s
+    shell_command = "unzip " + absolute_zip_path + " -d " + destination + "/public"
+    exec(shell_command)
+  end
+
+  # gitのユーザー設定して各リポジトリをcloneしてpullするやつ。
+  def setup
+  end
+
+  def build_repo_path(repo_name)
+    "~/" + repo_name
+  end
+
+  # ここでエラーハンドリングする
+  def exec(command)
+    info, error, pid_and_exit_code = Open3.capture3(command)
+    puts "====="
+    puts command
+    puts "====="
+    puts info
     puts error
     puts pid_and_exit_code
     # それぞれ
@@ -27,23 +54,6 @@ class ShellScriptRunner
     #
     # pid_and_exit_code
     #  pid 23122 exit 128
-    #
-    # クラス化してgit pushまでするメソッドとgitエラー時のメソッドとzipを展開するメソッドに分けたほうがいい
   end
-
-  # destinationは該当リポジトリの絶対パス
-  def self.unzip_to_public(file_path, repo_name)
-    destination = build_repo_path(repo_name)
-    absolute_zip_path = Rails.root.join('tmp' + file_path).to_s
-    shell_command = "unzip -d" + destination + absolute_zip_path
-    Open3.capture3(shell_command)
-  end
-
-  # 各リポジトリをcloneしてpullするやつ。
-  def setup
-  end
-
-  def build_repo_path(repo_name)
-    "~/" + repo_name
-  end
+end
 end

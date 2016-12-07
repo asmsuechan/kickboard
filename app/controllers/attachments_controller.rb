@@ -15,6 +15,6 @@ class AttachmentsController < ApplicationController
   private
 
   def attachment_params
-    params.require(:attachment).permit(:message, :file)
+    params.require(:attachment).permit(:message, :file, :repo_name)
   end
 end

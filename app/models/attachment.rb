@@ -1,6 +1,7 @@
 require Rails.root.join('script/shell_script_runner')
 
 class Attachment < ApplicationRecord
+  include ShellScriptRunner
   # TODO: ImageをFileにリネーム
   include ImageUploader[:file]
 

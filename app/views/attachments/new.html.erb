@@ -5,12 +5,18 @@
   </div>
 
   <div class="field">
-    <%= f.label :file%><br>
-    <%= f.file_field :file%>
+    <%= f.label :repo_name %><br>
+    <%= f.text_field :repo_name %>
   </div>
+
+  <div class="field">
+    <%= f.label :file %><br>
+    <%= f.file_field :file %>
+  </div>
+
   <%- if @attachment.file_data? %>
     <div class="field">
-      Remove attachment: <%= f.check_box :remove_file%>
+      Remove attachment: <%= f.check_box :remove_file %>
     </div>
   <%- end %>
   <div class="actions">
