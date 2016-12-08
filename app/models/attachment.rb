@@ -4,10 +4,11 @@ class Attachment < ApplicationRecord
   DEFAULT_COMMIT_MESSAGE = '[auto commit from kickboard]'.freeze
 
   # TODO: アップロードするzipの制約等コメントに残す
+  # アプロードするzipファイルはフォルダ丸ごとzipで圧縮してください。
   include FileUploader[:file]
   include ShellScriptRunner
 
-  before_save :set_message
+  before_save :set_commit_message
   after_commit :unzip
   after_commit :commit
 
@@ -19,7 +20,7 @@ class Attachment < ApplicationRecord
     ShellScriptRunner.commit_and_push(self.repo_name, self.message)
   end
 
-  def set_message
+  def set_commit_message
     self.message ||= DEFAULT_COMMIT_MESSAGE unless self.message
   end
 end

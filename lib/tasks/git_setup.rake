@@ -1,6 +1,6 @@
 require Rails.root.join('script/shell_script_runner')
 
-# TODO: Objectにincludeされたくない問題があるのでここはよく考える
+# ObjectにShellScriptRunnerをincludeしたくないのでModuleで包んでいます
 Module.new do
   extend Rake::DSL
   extend self

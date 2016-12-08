@@ -31,10 +31,8 @@ module ShellScriptRunner
       exec(command)
     end
 
-    # destinationは該当リポジトリの絶対パス
-    # TODO: 展開されたものをzipにするかその名前のフォルダをzipにするか
-    # その名前のフォルダをzipにしたほうがやりやすい。
     def unzip_to_public(file_path, repo_name)
+      # destinationは該当リポジトリ(展開先)の絶対パス
       destination = build_repo_path(repo_name)
       absolute_zip_path = Rails.root.join('tmp' + file_path).to_s
       command = "unzip " + absolute_zip_path + " -d " + destination + "/public"
@@ -46,12 +44,8 @@ module ShellScriptRunner
     # TODO: githubアカウントどうするか
     # R/W権限あるユーザーでなければいけない
     # 指定したリポジトリを全て~/にcloneする
-    # 配列でリポジトリ名を受け取る
-    # rakeから実行するようにする
     def clone
       REPOSITORIES.each do |repo|
-        # TODO: リポジトリ名からpullしてこれるようにするコードを書く。
-        # 環境変数に他の部分入れておくとか
         repo_url = build_complete_repo_url(repo)
         command = "cd #{REPOSITORY_ROOT} && git clone #{repo_url}"
         exec(command)
