@@ -39,6 +39,9 @@ GEM
       minitest (~> 5.1)
       tzinfo (~> 1.1)
     addressable (2.4.0)
+    annotate (2.6.5)
+      activerecord (>= 2.3.0)
+      rake (>= 0.8.7)
     arel (7.1.4)
     binding_of_caller (0.7.2)
       debug_inspector (>= 0.0.1)
@@ -182,6 +185,7 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  annotate
   byebug
   coffee-rails (~> 4.2)
   fastimage
