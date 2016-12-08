@@ -2,11 +2,15 @@ require Rails.root.join('script/shell_script_runner')
 
 class Attachment < ApplicationRecord
   DEFAULT_COMMIT_MESSAGE = '[auto commit from kickboard]'.freeze
+  REPOSITORIES = YAML.load_file(SETTING_PATH)['names'].freeze
 
   # TODO: アップロードするzipの制約等コメントに残す
   # アプロードするzipファイルはフォルダ丸ごとzipで圧縮してください。
   include FileUploader[:file]
   include ShellScriptRunner
+
+  # 存在しないディレクトリを弾く
+  validates :repo_name, inclusion: { in: REPOSITORIES }
 
   before_save :set_commit_message
   after_commit :unzip
