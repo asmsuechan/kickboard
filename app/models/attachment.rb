@@ -2,6 +2,7 @@ require Rails.root.join('script/shell_script_runner')
 
 class Attachment < ApplicationRecord
   DEFAULT_COMMIT_MESSAGE = '[auto commit from kickboard]'.freeze
+  SETTING_PATH = "#{Rails.root}/config/repository.yml".freeze
   REPOSITORIES = YAML.load_file(SETTING_PATH)['names'].freeze
 
   # TODO: アップロードするzipの制約等コメントに残す

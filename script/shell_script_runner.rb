@@ -52,6 +52,10 @@ module ShellScriptRunner
       end
     end
 
+    # TODO: 操作ミス用にgit reset --hard HEAD^してforce-pushできるようにする
+    def rollback
+    end
+
     def build_complete_repo_url(repo_name)
       REPOSITORY_BASE_URL + repo_name + '.git'
     end
