@@ -13,8 +13,9 @@ class Attachment < ApplicationRecord
   # 存在しないディレクトリを弾く
   validates :repo_name, inclusion: { in: REPOSITORIES }
 
+  # TODO: commit後なぜかUPDATEが走る
   before_save :set_commit_message
-  after_commit :unzip
+  before_commit :unzip
   after_commit :commit
 
   def unzip
