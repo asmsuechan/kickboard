@@ -6,7 +6,7 @@ module ShellScriptRunner
   # 各リポジトリを置くディレクトリ
   # ~/である意味は特にありません。
   REPOSITORY_ROOT = '~/'.freeze
-  REPOSITORIES = %w()
+  REPOSITORIES = Rails.application.repository.names
 
   class << self
     def pull(repo_name)
@@ -50,9 +50,14 @@ module ShellScriptRunner
       REPOSITORIES.each do |repo|
         # TODO: リポジトリ名からpullしてこれるようにするコードを書く。
         # 環境変数に他の部分入れておくとか
-        command = "cd #{REPOSITORY_ROOT} && git clone #{repo}"
-        exec()
+        repo_url = build_complete_repo_url(repo)
+        command = "cd #{REPOSITORY_ROOT} && git clone #{repo_url}"
+        exec(command)
       end
+    end
+
+    def build_complete_repo_url(repo_name)
+      Rails.application.repository.base_url + repo_name + '.git'
     end
 
     def build_repo_path(repo_name)
