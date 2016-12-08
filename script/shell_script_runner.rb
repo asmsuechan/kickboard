@@ -6,7 +6,9 @@ module ShellScriptRunner
   # 各リポジトリを置くディレクトリ
   # ~/である意味は特にありません。
   REPOSITORY_ROOT = '~/'.freeze
-  REPOSITORIES = Rails.application.repository.names
+  SETTING_PATH = "#{Rails.root}/config/repository.yml".freeze
+  REPOSITORIES = YAML.load_file(SETTING_PATH)['names'].freeze
+  REPOSITORY_BASE_URL = YAML.load_file(SETTING_PATH)['base_url'].freeze
 
   class << self
     def pull(repo_name)
@@ -57,7 +59,7 @@ module ShellScriptRunner
     end
 
     def build_complete_repo_url(repo_name)
-      Rails.application.repository.base_url + repo_name + '.git'
+      REPOSITORY_BASE_URL + repo_name + '.git'
     end
 
     def build_repo_path(repo_name)
