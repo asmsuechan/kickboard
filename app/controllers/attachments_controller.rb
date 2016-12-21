@@ -12,7 +12,7 @@ class AttachmentsController < ApplicationController
       render :new
     end
   rescue => e
-    # TODO: ここでエラーフロントに通知する
+    redirect_to :root, notice: "エラーが発生したため実行できませんでした: #{e}"
     Rails.application.config.shellscript_error_logger.info(e)
   end
 

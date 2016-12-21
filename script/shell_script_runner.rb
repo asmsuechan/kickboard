@@ -20,7 +20,6 @@ module ShellScriptRunner
     end
 
     def commit_and_push(repo_name, commit_message)
-      pull(repo_name)
       command = "cd #{build_repo_path(repo_name)} && git add . && git commit -m '#{commit_message}' && git push origin HEAD"
       exec(command)
       # エラー起きた時用にstash。エラー起きてない時は何も起こらない
@@ -36,7 +35,7 @@ module ShellScriptRunner
       # destinationは該当リポジトリ(展開先)の絶対パス
       destination = build_repo_path(repo_name)
       absolute_zip_path = Rails.root.join('tmp' + file_path).to_s
-      command = "unzip " + absolute_zip_path + " -d " + destination + "/public"
+      command = "unzip -o " + absolute_zip_path + " -d " + destination + "/public"
       exec(command)
     end
 
@@ -55,9 +54,9 @@ module ShellScriptRunner
 
     # 操作ミス用にgit reset --hard HEAD^してforce-pushでます。
     # 最新コミットがkickboardからのものでない時はrollbackできないようにしている
-    def rollback
+    def rollback(repo_name)
       command = "cd #{build_repo_path(repo_name)} && git reset --hard HEAD^ && git push -f origin HEAD"
-      if latest_commit_log.include?("[commit from kickboard]")
+      if latest_commit_log.include?("[auto commit from kickboard]")
         exec(command)
       else
         raise RollbackError

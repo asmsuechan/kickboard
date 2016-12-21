@@ -3,7 +3,7 @@
     <h3 class="text-muted">Kickboard</h3>
   </div>
   <div class="jumbotron">
-      <%= form_for(@attachment) do |f| %>
+    <%= form_for(@attachment, data: { remote: true }) do |f| %>
         <div class="col-xs-6 form-group">
           <div class="col-xs-12">
             <%#= f.label 'コミットメッセージ' %><br>
@@ -43,7 +43,7 @@
       <h3>コミットメッセージ</h3>
       <span>以下のようなテンプレートでコミットメッセージを書いてください。</span>
       <div class="well">
-        [commit from kickboard] <あなたの名前>
+        [auto commit from kickboard] <あなたの名前>
       </div>
     </div>
     <div class="col-xs-6">

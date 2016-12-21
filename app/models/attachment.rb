@@ -27,8 +27,10 @@ class Attachment < ApplicationRecord
 
   # TODO: commit後なぜかUPDATEが走る
   before_save :set_commit_message
-  before_commit :unzip
-  after_commit :commit
+  before_create :pull
+  after_create :unzip
+  # TODO: commitのコード走らせてないような気がするけどcommitされる。調査。
+  # after_save :commit
 
   def unzip
     ShellScriptRunner.unzip_to_public(self.file.url, self.repo_name)
@@ -36,6 +38,14 @@ class Attachment < ApplicationRecord
 
   def commit
     ShellScriptRunner.commit_and_push(self.repo_name, self.message)
+  end
+
+  def pull
+    ShellScriptRunner.pull(self.repo_name)
+  end
+
+  def rollback(repo_name)
+    ShellScriptRunner.rollback(repo_name)
   end
 
   def set_commit_message
