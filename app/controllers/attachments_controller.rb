@@ -7,12 +7,14 @@ class AttachmentsController < ApplicationController
   def create
     @attachment = Attachment.new(attachment_params)
     if @attachment.save
-      redirect_to :root, notice: 'file was successfully created.'
+      flash[:success] = '正常に実行しました。'
+      redirect_to :root
     else
       render :new
     end
   rescue => e
-    redirect_to :root, notice: "エラーが発生したため実行できませんでした: #{e}"
+    flash[:danger] = "エラーが発生したため実行できませんでした: #{e}"
+    redirect_to :root
     Rails.application.config.shellscript_error_logger.info(e)
   end
 
