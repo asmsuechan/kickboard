@@ -1,6 +1,7 @@
 class AttachmentsController < ApplicationController
   def new
     @attachment = Attachment.new
+    @repo_names = Attachment::REPOSITORIES
   end
 
   def create

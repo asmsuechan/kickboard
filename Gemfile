@@ -10,6 +10,11 @@ gem 'jquery-rails'
 gem 'turbolinks', '~> 5'
 gem 'jbuilder', '~> 2.5'
 
+# Bootstrap Dependencies
+gem 'therubyracer'
+gem 'less-rails'
+gem 'twitter-bootstrap-rails'
+
 # Shrine Dependencies
 gem 'fastimage'
 gem 'image_processing'

@@ -1,25 +1,59 @@
-<%= form_for(@attachment) do |f| %>
-  <div class="field">
-    <%= f.label :message %><br>
-    <%= f.text_field :message %>
+<div class="container">
+  <div class="header clearfix">
+    <h3 class="text-muted">Kickboard</h3>
   </div>
+  <div class="jumbotron">
+      <%= form_for(@attachment) do |f| %>
+        <div class="col-xs-6 form-group">
+          <div class="col-xs-12">
+            <%#= f.label 'コミットメッセージ' %><br>
+            <legend>コミットメッセージ</legend>
+            <%= f.text_field :message %>
+          </div>
+          <div class="col-xs-12">
+            <%#= f.label 'zipファイル' %><br>
+            <legend>zipファイル</legend>
+            <%= f.file_field :file %>
+          </div>
+        </div>
 
-  <div class="field">
-    <%= f.label :repo_name %><br>
-    <%= f.text_field :repo_name %>
-  </div>
+        <%- if @attachment.file_data? %>
+          <div class="field">
+            Remove attachment: <%= f.check_box :remove_file %>
+          </div>
+        <%- end %>
+        <div class="col-xs-6 form-group">
+          <%#= f.label 'リポジトリ名' %><br>
+          <legend>リポジトリ名</legend>
+            <% @repo_names.each do |repo_name| %>
+              <div class="radio">
+                <%= f.radio_button :repo_name, repo_name %> <%= f.label "repo_name_#{repo_name}", repo_name %>
+              </div>
+            <% end %>
+        </div>
 
-  <div class="field">
-    <%= f.label :file %><br>
-    <%= f.file_field :file %>
-  </div>
+        <div class="form-group actions" style="padding-left: 30px;">
+          <%= f.submit 'アップロード', class: "btn btn-default" %>
+        </div>
+      <% end %>
+    </div><!-- jumbotron -->
 
-  <%- if @attachment.file_data? %>
-    <div class="field">
-      Remove attachment: <%= f.check_box :remove_file %>
+  <div class="row">
+    <div class="col-xs-6">
+      <h3>コミットメッセージ</h3>
+      <span>以下のようなテンプレートでコミットメッセージを書いてください。</span>
+      <div class="well">
+        [自動commit] <名前>
+      </div>
     </div>
-  <%- end %>
-  <div class="actions">
-    <%= f.submit %>
+    <div class="col-xs-6">
+      <h3>zipファイル</h3>
+      <span>アップロードできるファイルはzipファイルのみです。</span>
+      <br>TODO: ここにzipファイルの制約を書く
+    </div>
+    <div class="col-xs-6">
+      <h3>リポジトリ名</h3>
+      <span>修正したいリポジトリ名を選択してください。ない場合は連絡ください。</span>
+    </div>
   </div>
-<% end %>
+</div>
