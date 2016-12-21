@@ -1,5 +1,6 @@
 require "open3"
 class ShellScriptError < StandardError;end
+class RollbackError < StandardError;end
 
 # 何気なくscriptに置いたけどlibっぽい
 module ShellScriptRunner
@@ -52,8 +53,24 @@ module ShellScriptRunner
       end
     end
 
-    # TODO: 操作ミス用にgit reset --hard HEAD^してforce-pushできるようにする
+    # 操作ミス用にgit reset --hard HEAD^してforce-pushでます。
+    # 最新コミットがkickboardからのものでない時はrollbackできないようにしている
     def rollback
+      command = "cd #{build_repo_path(repo_name)} && git reset --hard HEAD^ && git push -f origin HEAD"
+      if latest_commit_log.include?("[commit from kickboard]")
+        exec(command)
+      else
+        raise RollbackError
+      end
+    end
+
+    def latest_commit_log
+      logs.first
+    end
+
+    def logs
+      command = "cd #{build_repo_path(repo_name)} && git log"
+      exec(command, stdout: true).split("\n\n")
     end
 
     def build_complete_repo_url(repo_name)
@@ -64,9 +81,13 @@ module ShellScriptRunner
       REPOSITORY_ROOT + repo_name
     end
 
-    def exec(command)
+    def exec(command, opts = {})
       info, error, pid_and_exit_code = Open3.capture3(command)
       raise ShellScriptError, error unless pid_and_exit_code.success?
+      # exec(command, stdout: true)にしたら結果の出力が得られる
+      if opts[:stdout]
+        info
+      end
       #
       # pid_and_exit_code.class
       # => Process::Status
