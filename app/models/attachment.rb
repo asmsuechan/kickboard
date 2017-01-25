@@ -30,7 +30,7 @@ class Attachment < ApplicationRecord
   before_create :pull
   after_create :unzip
   # TODO: commitのコード走らせてないような気がするけどcommitされる。調査。
-  # after_save :commit
+  after_save :commit
 
   def unzip
     ShellScriptRunner.unzip_to_public(self.file.url, self.repo_name)
@@ -49,6 +49,6 @@ class Attachment < ApplicationRecord
   end
 
   def set_commit_message
-    self.message ||= DEFAULT_COMMIT_MESSAGE unless self.message
+    self.message = DEFAULT_COMMIT_MESSAGE + self.message
   end
 end

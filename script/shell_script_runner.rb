@@ -6,7 +6,7 @@ class RollbackError < StandardError;end
 module ShellScriptRunner
   # 各リポジトリを置くディレクトリ
   # ~/である意味は特にありません。
-  REPOSITORY_ROOT = '~/'.freeze
+  REPOSITORY_ROOT = "#{ENV['HOME']}/".freeze
   SETTING_PATH = "#{Rails.root}/config/repository.yml".freeze
   REPOSITORIES = YAML.load_file(SETTING_PATH)['names'].freeze
   REPOSITORY_BASE_URL = YAML.load_file(SETTING_PATH)['base_url'].freeze
@@ -56,7 +56,7 @@ module ShellScriptRunner
     # 最新コミットがkickboardからのものでない時はrollbackできないようにしている
     def rollback(repo_name)
       command = "cd #{build_repo_path(repo_name)} && git reset --hard HEAD^ && git push -f origin HEAD"
-      if latest_commit_log.include?("[auto commit from kickboard]")
+      if latest_commit_log.include?(Attachment::DEFAULT_COMMIT_MESSAGE)
         exec(command)
       else
         raise RollbackError
@@ -84,6 +84,7 @@ module ShellScriptRunner
       info, error, pid_and_exit_code = Open3.capture3(command)
       raise ShellScriptError, error unless pid_and_exit_code.success?
       # exec(command, stdout: true)にしたら結果の出力が得られる
+      # 現状logsで使われている
       if opts[:stdout]
         info
       end
