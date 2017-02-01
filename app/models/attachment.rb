@@ -44,11 +44,18 @@ class Attachment < ApplicationRecord
     ShellScriptRunner.pull(self.repo_name)
   end
 
-  def rollback(repo_name)
+  def set_commit_message
+    self.message = DEFAULT_COMMIT_MESSAGE + self.message
+  end
+
+  def self.rollback(repo_name)
     ShellScriptRunner.rollback(repo_name)
   end
 
-  def set_commit_message
-    self.message = DEFAULT_COMMIT_MESSAGE + self.message
+  def self.log(repo_name)
+    ShellScriptRunner.latest_commit_log(repo_name)
+  rescue => e
+    # リポジトリがサーバーの~/以下に見つからなかった時用のハンドリングです。
+    e
   end
 end

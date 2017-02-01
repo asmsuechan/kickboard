@@ -1,4 +1,5 @@
 require "open3"
+require "pry-byebug"
 class ShellScriptError < StandardError;end
 class RollbackError < StandardError;end
 
@@ -10,6 +11,7 @@ module ShellScriptRunner
   SETTING_PATH = "#{Rails.root}/config/repository.yml".freeze
   REPOSITORIES = YAML.load_file(SETTING_PATH)['names'].freeze
   REPOSITORY_BASE_URL = YAML.load_file(SETTING_PATH)['base_url'].freeze
+  DEFAULT_COMMIT_MESSAGE = "[auto commit from kickboard]"
 
   class << self
     def pull(repo_name)
@@ -56,18 +58,18 @@ module ShellScriptRunner
     # 最新コミットがkickboardからのものでない時はrollbackできないようにしている
     def rollback(repo_name)
       command = "cd #{build_repo_path(repo_name)} && git reset --hard HEAD^ && git push -f origin HEAD"
-      if latest_commit_log.include?(Attachment::DEFAULT_COMMIT_MESSAGE)
+      if latest_commit_log(repo_name).include?(DEFAULT_COMMIT_MESSAGE)
         exec(command)
       else
         raise RollbackError
       end
     end
 
-    def latest_commit_log
-      logs.first
+    def latest_commit_log(repo_name)
+      logs(repo_name)[1]
     end
 
-    def logs
+    def logs(repo_name)
       command = "cd #{build_repo_path(repo_name)} && git log"
       exec(command, stdout: true).split("\n\n")
     end
@@ -82,7 +84,9 @@ module ShellScriptRunner
 
     def exec(command, opts = {})
       info, error, pid_and_exit_code = Open3.capture3(command)
-      raise ShellScriptError, error unless pid_and_exit_code.success?
+      if !pid_and_exit_code.success? && !info.include?('nothing to commit')
+        raise ShellScriptError, error
+      end
       # exec(command, stdout: true)にしたら結果の出力が得られる
       # 現状logsで使われている
       if opts[:stdout]

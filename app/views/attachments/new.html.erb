@@ -25,9 +25,10 @@
         <div class="col-xs-6 form-group">
           <%#= f.label 'リポジトリ名' %><br>
           <legend>リポジトリ名</legend>
-            <% @repo_names.each do |repo_name| %>
+            <% @repo_names.each do |repo| %>
               <div class="radio">
-                <%= f.radio_button :repo_name, repo_name %> <%= f.label "repo_name_#{repo_name}", repo_name %>
+                <%= f.radio_button :repo_name, repo[:name] %> <%= f.label "repo_name_#{repo[:name]}", repo[:name] %>
+                <span> [<%= repo[:log] %>]</span>
               </div>
             <% end %>
         </div>
@@ -38,12 +39,35 @@
       <% end %>
     </div><!-- jumbotron -->
 
+  <div class='jumbotron'>
+    <div class="col-xs-6 form-group">
+      <legend>リポジトリ名</legend>
+      <%= form_tag 'attachments/rollback', method: :post do %>
+        <% @repo_names.each do |repo| %>
+          <div class="radio">
+            <%= radio_button_tag :repo_name, repo[:name] %> <%= label "repo_name_", repo[:name] %>
+            <span> [<%= repo[:log] %>]</span>
+          </div>
+        <% end %>
+        <%= submit_tag 'ロールバック', class: "btn btn-danger" %>
+      <% end %>
+    </div>
+    <div class="col-xs-6">
+      <h3>ロールバック</h3>
+      <div>1つ前のコミットを取り消します。</div>
+      <br>
+      <div>コミットメッセージの先頭が[auto commit from kickboard]の場合にのみコミットが取り消されます。</div>
+      <br>
+      <div>注)このprefixはアプリケーションにより自動で挿入されます。</div>
+    </div>
+  </div>
+
   <div class="row">
     <div class="col-xs-6">
       <h3>コミットメッセージ</h3>
       <span>以下のようなテンプレートでコミットメッセージを書いてください。</span>
       <div class="well">
-        [auto commit from kickboard] <あなたの名前>
+        <あなたの名前>:<あれば変更内容(空でも可)>
       </div>
     </div>
     <div class="col-xs-6">
@@ -55,5 +79,10 @@
       <h3>リポジトリ名</h3>
       <span>修正したいリポジトリ名を選択してください。ない場合は連絡ください。</span>
     </div>
+    <div class="col-xs-6">
+      <h3>注意</h3>
+      <span>修正箇所がない場合はコミットされません。</span>
+    </div>
   </div>
+  <footer class="footer">©asmsuechan 2017</footer>
 </div>
