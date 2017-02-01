@@ -1,24 +1,9 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
 
-Things you may want to cover:
+# How to use
+セットアップに必要なこと
 
-* Ruby version
-
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+* git configでコミット権持ったユーザーをサーバーに追加する
+* サーバーの~/以下にKickboardで使いたいリポジトリをclone
+* config/repository.yml にリポジトリのフォルダ名を追加
