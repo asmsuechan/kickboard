@@ -61,7 +61,7 @@ module ShellScriptRunner
       if latest_commit_log(repo_name).include?(DEFAULT_COMMIT_MESSAGE)
         exec(command)
       else
-        raise RollbackError
+        raise RollbackError.new('最新コミットがKickboardからのコミットではありません。')
       end
     end
 

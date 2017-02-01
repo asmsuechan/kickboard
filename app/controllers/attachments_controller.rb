@@ -25,8 +25,7 @@ class AttachmentsController < ApplicationController
     flash[:success] = '正常に実行しました。'
     redirect_to :root
   rescue => e
-    binding.pry
-    flash[:danger] = "エラーが発生したため実行できませんでした: #{e}"
+    flash[:danger] = "エラーが発生したため実行できませんでした: #{e.message}(#{e.class})"
     redirect_to :root
     Rails.application.config.shellscript_error_logger.info(e)
   end
