@@ -7,7 +7,7 @@ class AttachmentsController < ApplicationController
       { name: repo_name, branch: Attachment.branch(repo_name), log: Attachment.log(repo_name) }
     end
     key = YAML.load_file(KEY_PATH)['admin_key'].freeze
-    @is_admin = attachment_params[:admin] == key if params[:admin]
+    @is_admin = params[:admin] == key
   end
 
   def create
