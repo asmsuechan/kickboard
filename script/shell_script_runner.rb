@@ -1,5 +1,6 @@
 require "open3"
 require "pry-byebug"
+require "securerandom"
 class ShellScriptError < StandardError;end
 class RollbackError < StandardError;end
 
@@ -7,7 +8,7 @@ class RollbackError < StandardError;end
 module ShellScriptRunner
   # 各リポジトリを置くディレクトリ
   # ~/である意味は特にありません。
-  REPOSITORY_ROOT = "#{ENV['HOME']}/".freeze
+  REPOSITORY_ROOT = "#{ENV['REPOSITORY_ROOT'] || ENV['HOME']}/".freeze
   SETTING_PATH = "#{Rails.root}/config/repository.yml".freeze
   REPOSITORIES = YAML.load_file(SETTING_PATH)['names'].freeze
   BRANCHES = YAML.load_file(SETTING_PATH)['branches'].freeze
@@ -90,6 +91,13 @@ module ShellScriptRunner
 
     def branch_has_been_set_by_yml(repo_name)
       branch_name = BRANCHES[REPOSITORIES.index(repo_name)]
+    end
+
+    def zip_public_dir(repo_name, kickboard_public_path)
+      hash = SecureRandom.hex(10)
+      command = "cd #{build_repo_path(repo_name)} && zip #{kickboard_public_path}/#{hash}.zip -r public/"
+      exec(command)
+      hash
     end
 
     def exec(command, opts = {})

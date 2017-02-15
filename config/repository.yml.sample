@@ -1,0 +1,7 @@
+# 運用時はこのファイルの名前をrepository.ymlに変更してください
+base_url: 'https://google.com'
+# namesとbranchesは1対1で対応しています
+names:
+  - repository_name
+branches:
+  - master

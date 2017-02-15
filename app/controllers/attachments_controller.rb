@@ -30,10 +30,21 @@ class AttachmentsController < ApplicationController
     Rails.application.config.shellscript_error_logger.info(e)
   end
 
+  def create_zip
+    zip_name = Attachment.zip_public_dir(rollback_params[:repo_name_zip])
+    flash[:success] = "正常に実行しました。ファイル: #{request.origin + '/' + zip_name}.zip"
+    redirect_to :root
+  rescue => e
+    flash[:danger] = "エラーが発生したため実行できませんでした: #{e.message}(#{e.class})"
+    redirect_to :root
+    Rails.application.config.shellscript_error_logger.info(e)
+  end
+
   private
 
   def attachment_params
-    params.require(:attachment).permit(:message, :file, :repo_name)
+    # repo_nameとrepo_name_zipがあるの微妙そう
+    params.require(:attachment).permit(:message, :file, :repo_name, :repo_name_zip)
   end
 
   def rollback_params

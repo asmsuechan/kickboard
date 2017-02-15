@@ -21,3 +21,4 @@
 .byebug_history
 
 config/repository.yml
+public/*.zip

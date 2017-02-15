@@ -63,6 +63,20 @@
       <div>注)このprefixはアプリケーションにより自動で挿入されます。</div>
     </div>
   </div>
+  <div class='jumbotron'>
+    <div class="col-xs-6">
+      <%= form_tag 'attachments/create_zip', method: :post do %>
+        <% @repo_names.each do |repo| %>
+          <div class="radio">
+            <%= radio_button_tag :repo_name_zip, repo[:name] %> <%= label "repo_name_zip_", repo[:name] %>
+            <span> {<%= repo[:branch] %>}</span>
+            <span> [<%= repo[:log] %>]</span>
+          </div>
+        <% end %>
+        <%= submit_tag 'zipを作成', class: "btn btn-default" %>
+      <% end %>
+    </div>
+  </div>
 
   <div class="row">
     <div class="col-xs-6">

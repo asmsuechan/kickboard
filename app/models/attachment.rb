@@ -62,4 +62,8 @@ class Attachment < ApplicationRecord
   def self.branch(repo_name)
     ShellScriptRunner.branch_has_been_set_by_yml(repo_name)
   end
+
+  def self.zip_public_dir(repo_name)
+    ShellScriptRunner.zip_public_dir(repo_name, Rails.root.join('public'))
+  end
 end
