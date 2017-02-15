@@ -40,29 +40,32 @@
       <% end %>
     </div><!-- jumbotron -->
 
-  <div class='jumbotron'>
-    <div class="col-xs-6 form-group">
-      <legend>リポジトリ名</legend>
-      <%= form_tag 'attachments/rollback', method: :post do %>
-        <% @repo_names.each do |repo| %>
-          <div class="radio">
-            <%= radio_button_tag :repo_name, repo[:name] %> <%= label "repo_name_", repo[:name] %>
-            <span> {<%= repo[:branch] %>}</span>
-            <span> [<%= repo[:log] %>]</span>
-          </div>
+  <% if @is_admin %>
+    <div class='jumbotron'>
+      <div class="col-xs-6 form-group">
+        <legend>リポジトリ名</legend>
+        <%= form_tag 'attachments/rollback', method: :post do %>
+          <% @repo_names.each do |repo| %>
+            <div class="radio">
+              <%= radio_button_tag :repo_name, repo[:name] %> <%= label "repo_name_", repo[:name] %>
+              <span> {<%= repo[:branch] %>}</span>
+              <span> [<%= repo[:log] %>]</span>
+            </div>
+          <% end %>
+          <%= submit_tag 'ロールバック', class: "btn btn-danger" %>
         <% end %>
-        <%= submit_tag 'ロールバック', class: "btn btn-danger" %>
-      <% end %>
+      </div>
+      <div class="col-xs-6">
+        <h3>ロールバック</h3>
+        <div>1つ前のコミットを取り消します。</div>
+        <br>
+        <div>コミットメッセージの先頭が[auto commit from kickboard]の場合にのみコミットが取り消されます。</div>
+        <br>
+        <div>注)このprefixはアプリケーションにより自動で挿入されます。</div>
+      </div>
     </div>
-    <div class="col-xs-6">
-      <h3>ロールバック</h3>
-      <div>1つ前のコミットを取り消します。</div>
-      <br>
-      <div>コミットメッセージの先頭が[auto commit from kickboard]の場合にのみコミットが取り消されます。</div>
-      <br>
-      <div>注)このprefixはアプリケーションにより自動で挿入されます。</div>
-    </div>
-  </div>
+  <% end %>
+
   <div class='jumbotron'>
     <div class="col-xs-6">
       <%= form_tag 'attachments/create_zip', method: :post do %>

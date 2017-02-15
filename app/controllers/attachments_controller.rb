@@ -1,9 +1,13 @@
 class AttachmentsController < ApplicationController
+  KEY_PATH = Rails.root.join('config', 'key.yml')
+
   def new
     @attachment = Attachment.new
     @repo_names = Attachment::REPOSITORIES.map do |repo_name|
       { name: repo_name, branch: Attachment.branch(repo_name), log: Attachment.log(repo_name) }
     end
+    key = YAML.load_file(KEY_PATH)['admin_key'].freeze
+    @is_admin = attachment_params[:admin] == key if params[:admin]
   end
 
   def create
@@ -31,7 +35,7 @@ class AttachmentsController < ApplicationController
   end
 
   def create_zip
-    zip_name = Attachment.zip_public_dir(rollback_params[:repo_name_zip])
+    zip_name = Attachment.zip_public_dir(create_zip_params[:repo_name_zip])
     flash[:success] = "正常に実行しました。ファイル: #{request.origin + '/' + zip_name}.zip"
     redirect_to :root
   rescue => e
@@ -44,10 +48,14 @@ class AttachmentsController < ApplicationController
 
   def attachment_params
     # repo_nameとrepo_name_zipがあるの微妙そう
-    params.require(:attachment).permit(:message, :file, :repo_name, :repo_name_zip)
+    params.require(:attachment).permit(:message, :file, :repo_name, :admin)
   end
 
   def rollback_params
+    params.permit!
+  end
+
+  def create_zip_params
     params.permit!
   end
 end
