@@ -2,7 +2,7 @@ class AttachmentsController < ApplicationController
   def new
     @attachment = Attachment.new
     @repo_names = Attachment::REPOSITORIES.map do |repo_name|
-      { name: repo_name, log: Attachment.log(repo_name) }
+      { name: repo_name, branch: Attachment.branch(repo_name), log: Attachment.log(repo_name) }
     end
   end
 

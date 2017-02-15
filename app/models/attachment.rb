@@ -58,4 +58,8 @@ class Attachment < ApplicationRecord
     # リポジトリがサーバーの~/以下に見つからなかった時用のハンドリングです。
     e
   end
+
+  def self.branch(repo_name)
+    ShellScriptRunner.branch_has_been_set_by_yml(repo_name)
+  end
 end

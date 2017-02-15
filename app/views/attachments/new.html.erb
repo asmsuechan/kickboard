@@ -28,6 +28,7 @@
             <% @repo_names.each do |repo| %>
               <div class="radio">
                 <%= f.radio_button :repo_name, repo[:name] %> <%= f.label "repo_name_#{repo[:name]}", repo[:name] %>
+                <span> {<%= repo[:branch] %>}</span>
                 <span> [<%= repo[:log] %>]</span>
               </div>
             <% end %>
@@ -46,6 +47,7 @@
         <% @repo_names.each do |repo| %>
           <div class="radio">
             <%= radio_button_tag :repo_name, repo[:name] %> <%= label "repo_name_", repo[:name] %>
+            <span> {<%= repo[:branch] %>}</span>
             <span> [<%= repo[:log] %>]</span>
           </div>
         <% end %>

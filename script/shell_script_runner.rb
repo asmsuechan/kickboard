@@ -10,6 +10,7 @@ module ShellScriptRunner
   REPOSITORY_ROOT = "#{ENV['HOME']}/".freeze
   SETTING_PATH = "#{Rails.root}/config/repository.yml".freeze
   REPOSITORIES = YAML.load_file(SETTING_PATH)['names'].freeze
+  BRANCHES = YAML.load_file(SETTING_PATH)['branches'].freeze
   REPOSITORY_BASE_URL = YAML.load_file(SETTING_PATH)['base_url'].freeze
   DEFAULT_COMMIT_MESSAGE = "[auto commit from kickboard]"
 
@@ -47,9 +48,10 @@ module ShellScriptRunner
     # R/W権限あるユーザーでなければいけない
     # 指定したリポジトリを全て~/にcloneする
     def clone
-      REPOSITORIES.each do |repo|
+      REPOSITORIES.each_with_index do |repo, i|
         repo_url = build_complete_repo_url(repo)
-        command = "cd #{REPOSITORY_ROOT} && git clone #{repo_url}"
+        branch_name = BRANCHES[i]
+        command = "cd #{REPOSITORY_ROOT} && git checkout #{branch_name} && git clone #{repo_url}"
         exec(command)
       end
     end
@@ -80,6 +82,14 @@ module ShellScriptRunner
 
     def build_repo_path(repo_name)
       REPOSITORY_ROOT + repo_name
+    end
+
+    def tree_public
+      command = "cd #{build_repo_path(repo_name)} && pwd;find ./public | sort | sed '1d;s/^\.//;s/\/\([^/]*\)$/|--\1/;s/\/[^/|]*/|  /g'"
+    end
+
+    def branch_has_been_set_by_yml(repo_name)
+      branch_name = BRANCHES[REPOSITORIES.index(repo_name)]
     end
 
     def exec(command, opts = {})
